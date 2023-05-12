@@ -11,4 +11,6 @@ spec:
         env:
         - name: REGION
           value: "us"
+        - name: AREA
+          value: "north-america"
 
