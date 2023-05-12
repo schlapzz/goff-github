@@ -1,6 +1,8 @@
 on:
   pull_request:
     types: [opened, synchronize]
+    paths: 
+     - "helm/**"
 
 permissions:
   contents: read
@@ -18,23 +20,19 @@ jobs:
       - name: Checkout PR
         uses: actions/checkout@v3
         with:
-         path: pr
+         path: source
       - name: Checkout Target of PR
         uses: actions/checkout@v3
         with:
           path: target
           ref: ${{ github.event.pull_request.base.ref }}
       - run: |
-         echo "Target branch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
-         git clone -b $CI_MERGE_REQUEST_TARGET_BRANCH_NAME --single-branch $CI_REPOSITORY_URL /tmp/checkout/target
-         mkdir -p /tmp/source
-         mkdir -p /tmp/target
-         helm template mychart ./helm/mychart --output-dir /tmp/source/out
-         helm template mychart /tmp/checkout/target/helm/mychart --output-dir /tmp/target/out
-         goff diff "/tmp/source" "/tmp/target" --output-dir /tmp/
+         helm template mychart ./source/helm/mychart --output-dir /tmp/source/out
+         helm template mychart ./target/helm/mychart --output-dir /tmp/target/out
+         goff diff "/tmp/source" "/tmp/target" --output-dir .
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: /tmp/diff.md
+          path: diff.md
