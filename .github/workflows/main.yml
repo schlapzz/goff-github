@@ -25,8 +25,8 @@ jobs:
           path: target
           ref: ${{ github.event.pull_request.base.ref }}
       - run: |
-         helm template mychart source/helm/mychart --output-dir /tmp/source/out
-         helm template mychart target/helm/mychart --output-dir /tmp/target/out
+         helm template mychart ./source/helm/mychart --output-dir /tmp/source/out
+         helm template mychart ./target/helm/mychart --output-dir /tmp/target/out
          goff diff "/tmp/source" "/tmp/target" --output-dir /tmp/
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
