@@ -18,7 +18,7 @@ jobs:
       - name: Checkout PR
         uses: actions/checkout@v3
         with:
-         path: pr
+         path: source
       - name: Checkout Target of PR
         uses: actions/checkout@v3
         with:
