@@ -15,7 +15,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     services:
-      repoServer:
+      reposerver:
         image: registry.puzzle.ch/cicd/argocd-repo-server:latest
         ports:
           - "8081:8081"
@@ -37,8 +37,8 @@ jobs:
           path: target
           ref: ${{ github.event.pull_request.base.ref }}
       - run: |
-         goff argocd "./source/argocd" --repoServer="localhost:8081" --output-dir=/tmp/source/
-         goff argocd "./target/argocd" --repoServer="localhost:8081" --output-dir=/tmp/target/
+         goff argocd "./source/argocd" --repoServer="reposerver:8081" --output-dir=/tmp/source/
+         goff argocd "./target/argocd" --repoServer="reposerver:8081" --output-dir=/tmp/target/
          goff diff "/tmp/source" "/tmp/target" --output-dir .
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
